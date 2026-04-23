@@ -1,0 +1,287 @@
+.admin-container {
+    max-width: 1300px;
+    margin: 30px auto 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.admin-hero,
+.admin-section,
+.stat-card {
+    background: var(--surface-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 28px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 20px 44px rgba(31, 36, 18, 0.08);
+}
+
+.admin-hero {
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.admin-kicker {
+    margin: 0 0 8px;
+    color: var(--accent-strong);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.admin-subtitle {
+    margin-top: 10px;
+    color: var(--text-secondary);
+    max-width: 620px;
+}
+
+.Excell-button {
+    background: linear-gradient(135deg, #217346, #13462a);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 16px;
+    font-weight: 700;
+    box-shadow: 0 12px 24px rgba(19, 70, 42, 0.24);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.Excell-button:hover {
+    transform: translateY(-2px);
+    cursor: pointer;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.stat-card {
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stat-card span {
+    color: var(--text-secondary);
+}
+
+.stat-card strong {
+    font-size: 2rem;
+    color: var(--text-primary);
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1.08fr 0.92fr;
+    gap: 24px;
+}
+
+.admin-section {
+    padding: 28px;
+}
+
+.admin-section h3 {
+    color: var(--text-primary);
+    font-size: 1.45rem;
+    margin: 0;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.section-badge,
+.mini-badge,
+.likes-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.section-badge {
+    padding: 8px 14px;
+    background: rgba(132, 142, 89, 0.16);
+    color: var(--accent-strong);
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--border-soft);
+    background: var(--surface-strong);
+    color: var(--text-primary);
+    font: inherit;
+}
+
+.admin-form textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.form-row,
+.form-actions,
+.card-actions,
+.row-meta,
+.stats-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.form-row > * {
+    flex: 1;
+}
+
+.admin-section button {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    color: #3D422A;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.ghost-btn {
+    background: transparent !important;
+    border-color: var(--border-soft) !important;
+    color: var(--text-primary) !important;
+}
+
+.danger-btn {
+    background: rgba(255, 77, 77, 0.1) !important;
+    border-color: rgba(255, 77, 77, 0.2) !important;
+    color: #b54242 !important;
+}
+
+.admin-list,
+.admin-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.admin-row,
+.course-admin-card {
+    background: var(--surface-strong);
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    padding: 18px 20px;
+}
+
+.admin-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.admin-row p,
+.course-admin-card p {
+    color: var(--text-secondary);
+    margin: 6px 0 0;
+}
+
+.course-admin-head,
+.course-admin-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.course-admin-head h4 {
+    margin: 10px 0 0;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+}
+
+.course-admin-meta {
+    margin-top: 16px;
+    color: var(--text-secondary);
+}
+
+.mini-badge {
+    padding: 6px 12px;
+    background: rgba(132, 142, 89, 0.14);
+    color: var(--accent-strong);
+    font-size: 0.8rem;
+}
+
+.likes-chip {
+    padding: 8px 14px;
+    background: rgba(168, 71, 97, 0.12);
+    color: #a84761;
+}
+
+.admin-empty {
+    color: var(--text-secondary);
+}
+
+.stats-list {
+    justify-content: space-between;
+}
+
+.stats-list p {
+    min-width: 220px;
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+#stat-users,
+#stat-courses,
+.stats-list span {
+    color: var(--accent-strong);
+    font-weight: 800;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 992px) {
+    .admin-stats,
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-hero,
+    .admin-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .Excell-button {
+        width: 100%;
+    }
+
+    .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

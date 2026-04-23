@@ -1,0 +1,78 @@
+form {
+    background: white;
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    border: #3d422a7d solid 1px;
+}
+
+form label {
+    text-align: left;
+    display: block;
+    margin-bottom: 8px;
+    color: #3D422A;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="password"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="tel"]:focus,
+form input[type="password"]:focus {
+    border-color: #3D422A;
+    outline: none;
+}
+
+form button {
+    width: 100%;
+    align-self: center;
+    background-color: #d09fa977;
+    border: 1px solid #3d422a2e;
+    color: #3D422A;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button:hover {
+    background-color: #d09fa9e5;
+}
+
+form p {
+    margin-top: 15px;
+    color: #3D422A;
+}
+
+form a {
+    color: #3D422A;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+form a:hover {
+    color: #664f54a5;
+}
+
+.sign-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 32px;
+    color: #3D422A;
+}
