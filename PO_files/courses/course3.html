@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/course.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <h1 class="logo">MySQL with me</h1>
+            <nav id="menu">
+                <ul>
+                    <li><a href="../index.html">Басты бет</a></li>
+                    <li><a href="../courses.html">Сабақтар</a></li>
+                    <li><a href="../cart.html" style="font-weight: bold;">Себет</a></li>
+                    <li><button id="themeToggle" onclick="toggleTheme()" class="theme-btn">🌙 Қараңғы</button></li>
+                    <button onclick="logout()" class="btn-logout">
+                        Шығу
+                    </button>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="theory">
+            <h2>3. SELECT негіздері</h2>
+            <p>SELECT операторы MySQL-да мәліметтерді сұрау үшін қолданылады. Бұл оператор кестеден деректерді тауып,
+                оларды көрсету үшін пайдаланылады.</p>
+            <p>SELECT операторын қолдану үшін келесі синтаксис қолданылады:</p>
+            <pre>
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+            </pre>
+            <p>Мысалы, "students" кестесінен барлық студенттердің атын және жасын алу үшін келесі сұранысты қолдануға
+                болады:</p>
+            <pre>
+SELECT name, age
+FROM students;
+            </pre>
+            <p>WHERE шартын қолдану арқылы белгілі бір критерийлерге сәйкес жазбаларды сұрауға болады. Мысалы, жасы
+                20-дан үлкен студенттердің атын алу үшін:</p>
+            <pre>
+SELECT name
+FROM students
+WHERE age > 20;
+            </pre>
+            <div class="btn-group">
+                <button class="btn btn-download" onclick="LessonHandlers.course3.download()">Конспектіні жүктеу
+                    (.txt)</button>
+            </div>
+        </section>
+
+        <section class="practice">
+            <h2>Практикалық тапсырма</h2>
+            <p>Төмендегі сұранысты орындап, нәтижені осы жерге жазыңыз:</p>
+            <p><i>Тапсырма: "students" кестесінен барлық студенттердің атын және жасын алу үшін SELECT операторын
+                    қолданыңыз.</i></p>
+            <textarea id="practiceInput" placeholder="Мысалы: SELECT name, age FROM students;"></textarea>
+            <div class="btn-group">
+                <button class="btn btn-check" onclick="LessonHandlers.course3.check()">Жауапты тексеру</button>
+                <button class="btn btn-reset" onclick="resetPractice()">Тапсырманы қайтадан орындау</button>
+            </div>
+            <div id="feedback"></div>
+            <button class="next-lesson" onclick="window.location.href='course4.html'">Келесі сабақ</button>
+        </section>
+        <button id="scrollTop" onclick="scrollToTop()"
+            style="display: none; position: fixed; bottom: 20px; right: 20px;">
+            ↑
+        </button>
+    </main>
+    <footer>
+        <p>&copy; 2024 MySQL with me.</p>
+    </footer>
+    <script src="../script/course.js"></script>
+    <script src="../script/users.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireAuth();
+        });
+    </script>
+</body>
+
+</html>

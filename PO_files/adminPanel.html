@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - MySQL with me</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/admin.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <h1 class="logo">MySQL with me</h1>
+            <nav id="menu">
+                <ul>
+                    <li><a href="index.html">Басты бет</a></li>
+                    <li><a href="courses.html">Сабақтар</a></li>
+                    <li><a href="cart.html" style="font-weight: bold;">Себет</a></li>
+                    <li><button id="themeToggle" onclick="toggleTheme()" class="theme-btn">🌙 Қараңғы</button></li>
+                    <button onclick="logout()" class="btn-logout">
+                        Шығу
+                    </button>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <button class="Excell-button" onclick="exportToExcel()">Excell жүктеу</button>
+        <h2>Админ панель</h2>
+
+        <div class="admin-section">
+            <h3>Пайдаланушылар тізімі</h3>
+            <ul id="user-list">
+            </ul>
+        </div>
+
+        <div class="admin-section">
+            <h3>Курстар тізімі</h3>
+            <ul id="course-list">
+            </ul>
+        </div>
+
+        <div class="admin-section">
+            <h3>Статистика</h3>
+            <p>Пайдаланушылар саны: <span id="stat-users">0</span></p>
+            <p>Курстар саны: <span id="stat-courses">0</span></p>
+        </div>
+        <button id="scrollTop" onclick="scrollToTop()"
+            style="display: none; position: fixed; bottom: 20px; right: 20px;">
+            ↑
+        </button>
+    </main>
+    <footer>
+        <p>&copy; 2023 MySQL with me.</p>
+    </footer>
+    <script src="script/admin.js"></script>
+    <script src="script/users.js"></script>
+</body>
+
+</html>

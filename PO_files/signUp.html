@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style/form.css">
+    <link rel="stylesheet" href="style/style.css">
+
+</head>
+
+<body>
+    <main>
+        <h2 class="sign-title">Тіркелу</h2>
+        <div>
+            <form>
+                <label for="username">Пайдаланушы аты:</label>
+                <input placeholder="username" type="text" id="username" name="username" required minlength="3"
+                    maxlength="20">
+                <label for="email">Электрондық пошта:</label>
+                <input placeholder="email@example.com" type="email" id="email" name="email" required
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                <label for="phone">Телефон:</label>
+                <input placeholder="87777777777" type="tel" id="phone" name="phone" pattern="[0-9]{10,15}"
+                    title="Телефон тек сандардан тұруы керек және 10-15 цифр болуы керек">
+                <label for="password">Құпия сөз:</label>
+                <input placeholder="***" type="password" id="password" name="password" required minlength="6"
+                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                    title="Құпия сөз кемінде 6 символдан тұруы керек және әріптер мен цифрларды қамтуы керек">
+                <button onclick="signUp()" type="button">Тіркелу</button>
+                <p>Аккаунтыңыз бар ма? <a href="signIn.html">Кіру</a></p>
+            </form>
+        </div>
+    </main>
+    <script src="script/users.js"></script>
+</body>
+
+</html>
