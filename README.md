@@ -29,3 +29,4 @@
 - Іздеу, pagination, loading, confirm, toast хабарламалар
 - Парольді `bcrypt` арқылы хэштеу
 - Серверлік және фронтендтік валидация
+New feature added
