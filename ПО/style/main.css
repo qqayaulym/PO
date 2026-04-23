@@ -1,0 +1,153 @@
+.primary-div {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-radius: 40px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    border: 1px solid var(--card-border);
+    gap: 40px;
+    align-items: center;
+    padding: 50px;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.left-content {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.left-content h2 {
+    font-size: 42px;
+    margin: 0;
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+.left-content p {
+    margin: 0;
+    max-width: 580px;
+    color: var(--text-secondary);
+    font-size: 19px;
+    line-height: 1.8;
+}
+
+.right-image {
+    flex: 0.8;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    background: var(--card-muted);
+    padding: 20px;
+    border: 1px solid var(--card-border);
+}
+
+.MySQL-photo {
+    width: 100%;
+    max-width: 360px;
+    border-radius: 25px;
+    transition: transform 0.5s ease;
+}
+
+.primary-div:hover .MySQL-photo {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.container {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.secondary-div {
+    background: var(--card-bg);
+    border-radius: 30px;
+    padding: 40px 25px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--card-border);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.secondary-div:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-strong);
+    border-color: var(--accent);
+}
+
+.secondary-div img {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+}
+
+.secondary-div h3 {
+    font-size: 22px;
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: 700;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.signUp-button {
+    background-color: var(--btn-solid);
+    color: var(--text-white);
+    font-weight: bold;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 14px;
+    font-size: 17px;
+}
+
+.signUp-button:hover {
+    background-color: var(--btn-solid-hover);
+}
+
+.to-courses-button {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 2px solid var(--accent);
+    font-weight: bold;
+    padding: 14px 30px;
+    border-radius: 14px;
+    font-size: 17px;
+}
+
+.to-courses-button:hover {
+    background-color: var(--accent);
+    color: var(--text-white);
+}
+
+@media (max-width: 992px) {
+    .primary-div {
+        flex-direction: column;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .left-content {
+        align-items: center;
+    }
+
+    .buttons {
+        justify-content: center;
+    }
+
+    .right-image {
+        width: 100%;
+        min-height: auto;
+    }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Себет - MySQL with me</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/courses.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <h1 class="logo">MySQL with me</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Басты бет</a></li>
+                    <li><a href="courses.html">Сабақтар</a></li>
+                    <li><button id="themeToggle" onclick="toggleTheme()" class="theme-btn">🌙 Қараңғы</button></li>
+                    <li><button onclick="logout()" class="btn-logout">Шығу</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2>Менің себетім</h2>
+
+        <div id="cartList">
+            <p>Жүктелуде...</p>
+        </div>
+
+        <div class="cart-total-section">
+            <h3 id="totalAmount">Жалпы сома: 0 ₸</h3>
+            <button class="btn-checkout" onclick="processCheckout()">Төлем жасауға өту</button>
+            <button class="btn-info" onclick="window.location.href='courses.html'">Курстарға қайту</button>
+        </div>
+        <button id="scrollTop" onclick="scrollToTop()"
+            style="display: none; position: fixed; bottom: 20px; right: 20px;">
+            ↑
+        </button>
+    </main>
+    <footer>
+        <p>&copy; 2026 MySQL with me</p>
+    </footer>
+    <script src="script/users.js"></script>
+    <script src="script/cart.js"></script>
+</body>
+
+</html>

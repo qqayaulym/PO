@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/main.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <h1 class="logo">MySQL with me</h1>
+            <nav id="menu">
+                <ul>
+                    <li><a href="signIn.html">Кіру</a></li>
+                    <li><a href="courses.html">Сабақтар</a></li>
+                    <li><a href="cart.html" style="font-weight: bold;">Себет</a></li>
+                    <li><button id="themeToggle" onclick="toggleTheme()" class="theme-btn">🌙 Қараңғы</button></li>
+                    <button onclick="logout()" class="btn-logout">
+                        Шығу
+                    </button>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="primary-div">
+
+            <div class="left-content">
+                <h2>Басты бет</h2>
+                <p>MySQL-дің негіздерінен бастап күрделі сұраныстарға дейін:
+                    деректер базасымен жұмыс істеудің барлық қажетті дағдыларын
+                    нақты практикалық жобалар, интерактивті тапсырмалар және білімді
+                    бекітуге арналған тесттер арқылы тиімді меңгеріңіз. Өз біліміңізді
+                    іс жүзінде дәлелдеп, кәсіби деңгейге көтеріліңіз.</p>
+
+                <div class="buttons">
+                    <button onclick="window.location.href='signUp.html'" class="signUp-button">Тіркелу</button>
+                    <button onclick="window.location.href='courses.html'" class="to-courses-button">Курстарға
+                        өту</button>
+                </div>
+            </div>
+
+            <div class="right-image">
+                <img src="src/1759225973086.png" alt="MySQL" class="MySQL-photo">
+            </div>
+
+        </div>
+        <div class="container">
+            <div class="secondary-div">
+                <img src="src/database.svg" alt="database photo">
+                <h3>Практикалық сабақтар</h3>
+            </div>
+            <div class="secondary-div">
+                <img src="src/test.jpg" alt="test photo">
+                <h3>Тесттер мен бағалау</h3>
+            </div>
+            <div class="secondary-div">
+                <img src="src/Flag_of_Kazakhstan.svg.png" alt="content photo">
+                <h3>Қазақша контент</h3>
+            </div>
+        </div>
+        <button id="scrollTop" onclick="scrollToTop()"
+            style="display: none; position: fixed; bottom: 20px; right: 20px;">
+            ↑
+        </button>
+    </main>
+    <footer>
+        <p>&copy; 2026 MySQL with me</p>
+    </footer>
+    <script src="script/users.js"></script>
+</body>
+
+</html>

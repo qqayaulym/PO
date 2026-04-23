@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL with me - Кіріспе</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/course.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <h1 class="logo">MySQL with me</h1>
+            <nav id="menu">
+                <ul>
+                    <li><a href="../index.html">Басты бет</a></li>
+                    <li><a href="../courses.html">Сабақтар</a></li>
+                    <li><a href="../cart.html" style="font-weight: bold;">Себет</a></li>
+                    <li><button id="themeToggle" onclick="toggleTheme()" class="theme-btn">🌙 Қараңғы</button></li>
+                    <button onclick="logout()" class="btn-logout">
+                        Шығу
+                    </button>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="theory">
+            <h2>1. Кіріспе</h2>
+            <p>MySQL — ашық кодты реляциялық мәліметтер қоры жүйесі (RDBMS). Ол деректерді сақтау және басқару үшін
+                қолданылады.</p>
+
+            <h2>Орнату қадамдары</h2>
+            <pre>
+sudo apt update
+sudo apt upgrade
+sudo apt install mysql-server
+            </pre>
+
+            <h2>Негізгі командалар</h2>
+            <ul>
+                <li><code>SHOW DATABASES;</code> — Мәліметтер қорын көру</li>
+                <li><code>CREATE DATABASE name;</code> — Жаңа қор құру</li>
+            </ul>
+            <div class="btn-group">
+                <button class="btn-download" onclick="LessonHandlers.course1.download()">Конспектіні жүктеу
+                    (.txt)</button>
+            </div>
+        </section>
+
+        <section class="practice">
+            <h2>Практикалық тапсырма</h2>
+            <p>Төмендегі командаларды орындап, нәтижені осы жерге жазыңыз (немесе командаларды ретімен енгізіңіз):</p>
+
+            <p><i>Тапсырма: "university" деген қор құрып, оған "students" кестесін қосыңыз.</i></p>
+
+            <textarea id="practiceInput"
+                placeholder="Мысалы: CREATE DATABASE university; USE university; ..."></textarea>
+
+            <div class="btn-group">
+                <button class="btn-check" onclick="LessonHandlers.course1.check()">Жауапты тексеру</button>
+                <button class="btn-reset" onclick="resetPractice()">Тазалау</button>
+            </div>
+
+            <div id="feedback"></div>
+            <button class="next-lesson" onclick="window.location.href='course2.html'">Келесі сабақ</button>
+        </section>
+        <button id="scrollTop" onclick="scrollToTop()"
+            style="display: none; position: fixed; bottom: 20px; right: 20px;">
+            ↑
+        </button>
+    </main>
+    <footer>
+        <p>&copy; 2026 MySQL with me</p>
+    </footer>
+
+    <script src="../script/course.js"></script>
+    <script src="../script/users.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireAuth();
+        });
+    </script>
+</body>
+
+</html>

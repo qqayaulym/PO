@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style/form.css">
+    <link rel="stylesheet" href="style/style.css">
+
+</head>
+
+<body>
+    <main>
+        <h2 class="sign-title">Кіру</h2>
+        <div>
+            <form>
+                <label for="username">Пайдаланушы аты:</label>
+                <input placeholder="username" type="text" id="username" name="username" required minlength="3"
+                    maxlength="20" pattern="^[a-zA-Z0-9_]+$"
+                    title="Пайдаланушы аты тек әріптер, цифрлар және астыртқыштардан тұруы керек">
+                <label for="password">Құпиясөз:</label>
+                <input placeholder="***" type="password" id="password" name="password" required minlength="6 "
+                    title="Құпия сөз кемінде 6 символдан тұруы керек" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+                    title="Құпия сөз кемінде 6 символдан тұруы керек және әріптер мен цифрларды қамтуы керек">
+                <button type="button" onclick="signIn()">Кіру</button>
+                <p>Аккаунтыңыз жоқ па? <a href="signUp.html">Тіркелу</a></p>
+            </form>
+        </div>
+    </main>
+    <script src="script/users.js"></script>
+</body>
+
+</html>

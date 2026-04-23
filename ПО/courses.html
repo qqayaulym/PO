@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сабақтар - MySQL with me</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/courses.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <h1 class="logo">MySQL with me</h1>
+            <nav id="menu">
+                <ul>
+                    <li><a href="index.html">Басты бет</a></li>
+                    <li><a href="cart.html" style="font-weight: bold;">Себет</a></li>
+                    <li><button id="themeToggle" onclick="toggleTheme()" class="theme-btn">🌙 Қараңғы</button></li>
+                    <li><button onclick="logout()" class="btn-logout">Шығу</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h2 id="courses-page-h2">Оқу бағдарламасы</h2>
+
+        <section class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Курс іздеу..." oninput="handleSearch(event)">
+            </div>
+
+            <div class="filter-group">
+                <button class="filter-btn active" data-cat="all" onclick="filterCourses('all')">Барлығы</button>
+                <button class="filter-btn" data-cat="database" onclick="filterCourses('database')">Деректер
+                    қоры</button>
+                <button class="filter-btn" data-cat="advanced" onclick="filterCourses('advanced')">Күрделі
+                    деңгей</button>
+            </div>
+
+            <div class="sort-group">
+                <select onchange="sortCourses(this.value)">
+                    <option value="default">Сұрыптау</option>
+                    <option value="price-asc">Арзаннан қымбатқа</option>
+                    <option value="price-desc">Қымбаттан арзанға</option>
+                    <option value="likes">Танымалдылығы</option>
+                </select>
+            </div>
+        </section>
+
+        <div id="spinner" style="display: none;">Жүктелуде...</div>
+
+        <div id="courseGrid" class="courses-container"></div>
+
+        <button id="scrollTop" onclick="scrollToTop()"
+            style="display: none; position: fixed; bottom: 20px; right: 20px;">
+            ↑
+        </button>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 MySQL with me</p>
+    </footer>
+
+    <script src="script/users.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireAuth();
+            if (typeof renderCourses === "function") {
+                renderCourses();
+            }
+        });
+    </script>
+</body>
+
+</html>
