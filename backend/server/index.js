@@ -4,11 +4,13 @@ import cors from "cors";
 import bcrypt from "bcrypt";
 import {
   createCourse,
+  createEnrollments,
   createUser,
   deleteCourse,
   deleteUser,
   getAllCourses,
   getCourseById,
+  getEnrolledCourseIds,
   getCourseBySlug,
   getCourses,
   getDashboardStats,
@@ -93,11 +95,22 @@ app.post("/api/auth/signin", async (req, res) => {
       createdAt: user.created_at,
     },
     likedCourseIds: getLikedCourseIds(user.id),
+    enrolledCourseIds: getEnrolledCourseIds(user.id),
   });
 });
 
 app.get("/api/users", (_req, res) => {
   res.json({ items: listUsers() });
+});
+
+app.get("/api/users/:id/enrollments", (req, res) => {
+  const userId = Number(req.params.id);
+  const user = getUserById(userId);
+  if (!user) {
+    return res.status(404).json({ message: "Пайдаланушы табылмады." });
+  }
+
+  return res.json({ items: getEnrolledCourseIds(userId) });
 });
 
 app.delete("/api/users/:id", (req, res) => {
@@ -231,6 +244,45 @@ app.post("/api/courses/:id/like", (req, res) => {
   }
 
   return res.json(toggleCourseLike(course.id, userId));
+});
+
+app.post("/api/checkout", (req, res) => {
+  const userId = Number(req.body.userId);
+  const courseIds = Array.isArray(req.body.courseIds) ? req.body.courseIds.map(Number) : [];
+
+  if (!userId) {
+    return res.status(400).json({ message: "Сатып алу үшін пайдаланушы идентификаторы керек." });
+  }
+
+  const user = getUserById(userId);
+  if (!user) {
+    return res.status(401).json({ message: "Пайдаланушы табылмады. Қайта кіріңіз." });
+  }
+
+  const uniqueCourseIds = [...new Set(courseIds.filter(Boolean))];
+  if (uniqueCourseIds.length === 0) {
+    return res.status(400).json({ message: "Себет бос. Алдымен курс таңдаңыз." });
+  }
+
+  const allCourses = getAllCourses();
+  const missingCourse = uniqueCourseIds.find(
+    (courseId) => !allCourses.some((course) => course.id === courseId)
+  );
+
+  if (missingCourse) {
+    return res.status(404).json({ message: "Таңдалған курстардың бірі табылмады." });
+  }
+
+  const result = createEnrollments(userId, uniqueCourseIds);
+  const purchasedCourses = allCourses.filter((course) => uniqueCourseIds.includes(course.id));
+  const totalAmount = purchasedCourses.reduce((sum, course) => sum + Number(course.price || 0), 0);
+
+  return res.json({
+    ok: true,
+    createdCount: result.createdCount,
+    enrolledCourseIds: result.enrolledCourseIds,
+    totalAmount,
+  });
 });
 
 app.get("/api/dashboard", (_req, res) => {

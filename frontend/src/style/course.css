@@ -1,15 +1,47 @@
+.lesson-page {
+    max-width: 980px;
+}
+
 .theory,
-.practice {
+.practice,
+.lesson-locked {
     background-color: var(--card-bg);
     padding: 35px;
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-soft);
     border: 1px solid #eef0e8;
     margin-bottom: 30px;
 }
 
+.lesson-topline,
+.lesson-navigation {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.lesson-topline {
+    margin-bottom: 16px;
+}
+
+.lesson-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(132, 142, 89, 0.14);
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+.lesson-chip.soft {
+    background: rgba(61, 66, 42, 0.08);
+    color: var(--text-primary);
+}
+
 .theory h2,
-.practice h2 {
+.practice h2,
+.lesson-locked h2 {
     color: var(--text-primary);
     border-left: 6px solid #848E59;
     padding-left: 15px;
@@ -113,8 +145,6 @@ code {
 
 .next-lesson {
     background-color: #848E59;
-    margin-top: 25px;
-    float: right;
 }
 
 .materials-block {
@@ -177,19 +207,21 @@ code {
     font-weight: 500;
 }
 
+.lesson-locked p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
 @media (max-width: 600px) {
-    .btn-group {
+    .btn-group,
+    .lesson-navigation {
         flex-direction: column;
     }
 
     .btn-check,
     .btn-reset,
-    .btn-download {
-        width: 100%;
-    }
-
+    .btn-download,
     .next-lesson {
-        float: none;
         width: 100%;
     }
 }

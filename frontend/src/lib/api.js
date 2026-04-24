@@ -10,7 +10,15 @@ async function request(path, options = {}) {
   });
 
   const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+  let data = null;
+
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { message: text };
+    }
+  }
 
   if (!response.ok) {
     throw new Error(data?.message || "Сервермен байланыста қате болды.");
@@ -82,9 +90,18 @@ export const api = {
   getUsers() {
     return request("/users");
   },
+  getUserEnrollments(userId) {
+    return request(`/users/${userId}/enrollments`);
+  },
   deleteUser(id) {
     return request(`/users/${id}`, {
       method: "DELETE",
+    });
+  },
+  checkout(payload) {
+    return request("/checkout", {
+      method: "POST",
+      body: JSON.stringify(payload),
     });
   },
   getDashboard() {

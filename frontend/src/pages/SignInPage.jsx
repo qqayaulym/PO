@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 import "../style/form.css";
 
-function SignInPage({ setCurrentUser, setFavorites, showToast }) {
+function SignInPage({ setCurrentUser, setFavorites, setEnrolledCourseIds, showToast }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -22,9 +22,9 @@ function SignInPage({ setCurrentUser, setFavorites, showToast }) {
 
     try {
       const response = await api.signIn(formData);
-      localStorage.setItem("currentUser", JSON.stringify(response.user));
       setCurrentUser(response.user);
       setFavorites(response.likedCourseIds || []);
+      setEnrolledCourseIds(response.enrolledCourseIds || []);
       showToast(`${response.user.fullName}, қош келдіңіз!`, "success");
       navigate("/");
     } catch (error) {
@@ -35,10 +35,16 @@ function SignInPage({ setCurrentUser, setFavorites, showToast }) {
   };
 
   return (
-    <main>
-      <h2 className="sign-title">Кіру</h2>
+    <main className="auth-page">
+      <div className="auth-intro">
+        <p className="auth-kicker">SQL Study Hub</p>
+        <h2 className="sign-title">Кіру</h2>
+        <p className="auth-subtitle">
+          Оқу прогресін, ашылған курстарды және сабақтарды жалғастыру үшін аккаунтқа кіріңіз.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
           type="email"
@@ -64,11 +70,11 @@ function SignInPage({ setCurrentUser, setFavorites, showToast }) {
           {isSubmitting ? "Күтіңіз..." : "Кіру"}
         </button>
 
-        <p>
-          Аккаунтыңыз жоқ па?{" "}
-          <span onClick={() => navigate("/signup")} style={{ cursor: "pointer" }}>
+        <p className="form-switch">
+          Аккаунтыңыз жоқ па?
+          <button type="button" className="inline-link-btn" onClick={() => navigate("/signup")}>
             Тіркелу
-          </span>
+          </button>
         </p>
       </form>
     </main>

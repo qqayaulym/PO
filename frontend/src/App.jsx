@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { useToast } from "./hooks/useToast";
@@ -17,6 +17,7 @@ import AdminPage from "./pages/AdminPage";
 import LessonPage from "./pages/LessonPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
+import { api } from "./lib/api";
 import "./style/style.css";
 
 function RequireAuth({ currentUser, adminOnly = false, children }) {
@@ -37,16 +38,11 @@ export default function App() {
     location.pathname.startsWith("/signin") || location.pathname.startsWith("/signup");
 
   const [theme, setTheme] = useLocalStorage("theme", "light");
-  const [currentUser, setCurrentUser] = useState(() => {
-    try {
-      const raw = localStorage.getItem("currentUser");
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [currentUser, setCurrentUser] = useLocalStorage("currentUser", null);
   const [cart, setCart] = useLocalStorage("cart", []);
   const [favorites, setFavorites] = useLocalStorage("favorites", []);
+  const [enrolledCourseIds, setEnrolledCourseIds] = useLocalStorage("enrolledCourseIds", []);
+  const enrollmentsSyncedUserIdRef = useRef(null);
   const { toasts, show: showToast, remove } = useToast();
 
   useEffect(() => {
@@ -57,12 +53,28 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!currentUser?.id) return;
+    if (enrollmentsSyncedUserIdRef.current === currentUser.id) return;
+
+    api.getUserEnrollments(currentUser.id)
+      .then((response) => {
+        setEnrolledCourseIds(response.items || []);
+        enrollmentsSyncedUserIdRef.current = currentUser.id;
+      })
+      .catch(() => {
+        enrollmentsSyncedUserIdRef.current = currentUser.id;
+      });
+  }, [currentUser, setEnrolledCourseIds]);
+
   const toggleTheme = () => setTheme((value) => (value === "dark" ? "light" : "dark"));
 
   const logout = () => {
-    localStorage.removeItem("currentUser");
     setCurrentUser(null);
+    setCart([]);
     setFavorites([]);
+    setEnrolledCourseIds([]);
+    enrollmentsSyncedUserIdRef.current = null;
     showToast("Жүйеден шықтыңыз", "info");
   };
 
@@ -71,21 +83,31 @@ export default function App() {
       {!hideLayout && (
         <Header
           currentUser={currentUser}
+          enrolledCourseIds={enrolledCourseIds}
           logout={logout}
           toggleTheme={toggleTheme}
           theme={theme}
         />
       )}
 
-      <main>
+      <div className="app-main">
         <Routes>
-          <Route path="/" element={<HomePage currentUser={currentUser} />} />
+          <Route
+            path="/"
+            element={
+              <HomePage
+                currentUser={currentUser}
+                enrolledCourseIds={enrolledCourseIds}
+              />
+            }
+          />
           <Route
             path="/signin"
             element={
               <SignInPage
                 setCurrentUser={setCurrentUser}
                 setFavorites={setFavorites}
+                setEnrolledCourseIds={setEnrolledCourseIds}
                 showToast={showToast}
               />
             }
@@ -102,6 +124,7 @@ export default function App() {
                   currentUser={currentUser}
                   favorites={favorites}
                   setFavorites={setFavorites}
+                  enrolledCourseIds={enrolledCourseIds}
                   showToast={showToast}
                 />
               </RequireAuth>
@@ -112,7 +135,14 @@ export default function App() {
             path="/cart"
             element={
               <RequireAuth currentUser={currentUser}>
-                <CartPage cart={cart} setCart={setCart} showToast={showToast} />
+                <CartPage
+                  cart={cart}
+                  setCart={setCart}
+                  currentUser={currentUser}
+                  enrolledCourseIds={enrolledCourseIds}
+                  setEnrolledCourseIds={setEnrolledCourseIds}
+                  showToast={showToast}
+                />
               </RequireAuth>
             }
           />
@@ -130,14 +160,18 @@ export default function App() {
             path="/course/:id"
             element={
               <RequireAuth currentUser={currentUser}>
-                <LessonPage showToast={showToast} />
+                <LessonPage
+                  currentUser={currentUser}
+                  enrolledCourseIds={enrolledCourseIds}
+                  showToast={showToast}
+                />
               </RequireAuth>
             }
           />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </main>
+      </div>
 
       {!hideLayout && <Footer />}
 

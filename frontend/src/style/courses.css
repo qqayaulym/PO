@@ -7,17 +7,6 @@
     letter-spacing: -1px;
 }
 
-.info-panel {
-    background: #848E59;
-    color: white;
-    padding: 15px 25px;
-    border-radius: 50px;
-    display: inline-block;
-    margin-bottom: 30px;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(132, 142, 89, 0.3);
-}
-
 .controls {
     display: flex;
     flex-wrap: wrap;
@@ -30,7 +19,7 @@
     margin-bottom: 40px;
     backdrop-filter: blur(12px);
     border: 1px solid var(--border-soft);
-    box-shadow: 0 16px 40px rgba(61, 66, 42, 0.08);
+    box-shadow: var(--shadow-soft);
 }
 
 .search-box input {
@@ -101,7 +90,7 @@
     padding: 25px 35px;
     margin-bottom: 16px;
     border-radius: 30px;
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-soft);
     border: 1px solid var(--border-soft);
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -110,6 +99,14 @@
     transform: translateX(10px);
     box-shadow: 0 8px 25px rgba(61, 66, 42, 0.08);
     border-color: #848E59;
+}
+
+.course-card-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
 }
 
 .course-card h3 {
@@ -144,16 +141,29 @@
     margin-left: 24px;
 }
 
-.category-tag {
+.category-tag,
+.access-tag {
     display: inline-flex;
     align-items: center;
-    margin-bottom: 12px;
     padding: 7px 14px;
     border-radius: 999px;
-    background: rgba(132, 142, 89, 0.14);
-    color: var(--accent-strong);
     font-size: 0.84rem;
     font-weight: 700;
+}
+
+.category-tag {
+    background: rgba(132, 142, 89, 0.14);
+    color: var(--accent-strong);
+}
+
+.access-tag.open {
+    background: rgba(46, 125, 50, 0.12);
+    color: #2e7d32;
+}
+
+.access-tag.locked {
+    background: rgba(168, 71, 97, 0.12);
+    color: #a84761;
 }
 
 .course-card button {
@@ -170,6 +180,11 @@
 .course-card button:hover {
     background: #4a5231;
     letter-spacing: 0.5px;
+}
+
+.course-card button:disabled {
+    opacity: 0.7;
+    cursor: default;
 }
 
 .fav-btn {
@@ -197,26 +212,26 @@
     border: 1px solid var(--border-soft);
 }
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+.pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
+    gap: 12px;
+    margin-top: 18px;
 }
 
-.modal-content {
-    background: white;
-    padding: 40px;
-    border-radius: 30px;
-    max-width: 500px;
-    width: 90%;
-    text-align: center;
+.pagination button {
+    background: var(--surface-strong);
+    color: var(--text-primary);
+    border: 1px solid var(--border-soft);
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

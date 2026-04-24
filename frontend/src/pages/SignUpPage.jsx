@@ -34,10 +34,16 @@ function SignUpPage({ showToast }) {
   };
 
   return (
-    <main>
-      <h2 className="sign-title">Тіркелу</h2>
+    <main className="auth-page">
+      <div className="auth-intro">
+        <p className="auth-kicker">Жаңа аккаунт</p>
+        <h2 className="sign-title">Тіркелу</h2>
+        <p className="auth-subtitle">
+          Бірнеше минутта тіркеліп, SQLite курстарын қазақ тілінде практикалық форматта бастаңыз.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="fullName">Аты-жөні:</label>
         <input
           type="text"
@@ -84,11 +90,11 @@ function SignUpPage({ showToast }) {
           {isSubmitting ? "Күтіңіз..." : "Тіркелу"}
         </button>
 
-        <p>
-          Аккаунтыңыз бар ма?{" "}
-          <span onClick={() => navigate("/signin")} style={{ cursor: "pointer" }}>
+        <p className="form-switch">
+          Аккаунтыңыз бар ма?
+          <button type="button" className="inline-link-btn" onClick={() => navigate("/signin")}>
             Кіру
-          </span>
+          </button>
         </p>
       </form>
     </main>

@@ -70,6 +70,11 @@ function AdminPage({ showToast }) {
   }, [showToast]);
 
   const exportToExcel = () => {
+    const escapeCsv = (value) => {
+      const text = String(value ?? "");
+      return `"${text.replaceAll('"', '""')}"`;
+    };
+
     const rows = [
       ["Course", "Level", "Price", "Likes", "Lesson"],
       ...courses.map((course) => [
@@ -80,7 +85,7 @@ function AdminPage({ showToast }) {
         course.lesson?.title || "Сабақ жоқ",
       ]),
     ];
-    const csv = rows.map((row) => row.join(",")).join("\n");
+    const csv = rows.map((row) => row.map(escapeCsv).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -115,6 +120,7 @@ function AdminPage({ showToast }) {
 
     try {
       setIsLoading(true);
+      const selectedCourseId = lessonCourseId;
       if (courseForm.id) {
         await api.updateCourse(courseForm.id, courseForm);
         showToast?.("Курс жаңартылды", "success");
@@ -124,7 +130,7 @@ function AdminPage({ showToast }) {
       }
 
       setCourseForm(emptyCourseForm);
-      await loadDashboard(lessonCourseId);
+      await loadDashboard(selectedCourseId);
     } catch (error) {
       showToast?.(error.message, "error");
     }

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../lib/api";
 import "../style/course.css";
 
-function LessonContent({ course, nextCourse, navigate, showToast }) {
+function LessonContent({ course, previousCourse, nextCourse, navigate, showToast }) {
   const [userCode, setUserCode] = useState("");
   const [feedback, setFeedback] = useState({ text: "", type: "" });
   const [quizAnswer, setQuizAnswer] = useState(null);
@@ -11,7 +11,12 @@ function LessonContent({ course, nextCourse, navigate, showToast }) {
   const lesson = course?.lesson;
 
   if (!lesson) {
-    return <div className="text-white text-center py-20">Сабақ табылмады.</div>;
+    return (
+      <section className="lesson-state-card">
+        <h2>Сабақ табылмады</h2>
+        <p>Бұл курсқа сабақ материалы әлі қосылмаған.</p>
+      </section>
+    );
   }
 
   const hasQuiz = lesson.quiz?.question && Array.isArray(lesson.quiz?.options) && lesson.quiz.options.length > 1;
@@ -54,6 +59,10 @@ function LessonContent({ course, nextCourse, navigate, showToast }) {
   return (
     <main className="animate-fade-in lesson-page">
       <section className="theory">
+        <div className="lesson-topline">
+          <span className="lesson-chip">{course.level}</span>
+          <span className="lesson-chip soft">{course.price === 0 ? "Тегін курс" : `${course.price} ₸`}</span>
+        </div>
         <h2>{lesson.title}</h2>
         <div className="theory-content">
           <p>{lesson.theory}</p>
@@ -120,19 +129,27 @@ function LessonContent({ course, nextCourse, navigate, showToast }) {
         )}
 
         {feedback.type === "success" && (
-          <button
-            className="next-lesson"
-            onClick={() => navigate(nextCourse ? `/course/${nextCourse.slug}` : "/courses")}
-          >
-            {nextCourse ? "Келесі сабаққа өту" : "Курстарға оралу"}
-          </button>
+          <div className="lesson-navigation">
+            <button
+              className="btn-reset"
+              onClick={() => navigate(previousCourse ? `/course/${previousCourse.slug}` : "/courses")}
+            >
+              {previousCourse ? "← Алдыңғы сабақ" : "← Курстарға оралу"}
+            </button>
+            <button
+              className="next-lesson"
+              onClick={() => navigate(nextCourse ? `/course/${nextCourse.slug}` : "/courses")}
+            >
+              {nextCourse ? "Келесі сабаққа өту" : "Курстарға оралу"}
+            </button>
+          </div>
         )}
       </section>
     </main>
   );
 }
 
-const LessonPage = ({ showToast }) => {
+const LessonPage = ({ enrolledCourseIds = [], showToast }) => {
   const navigate = useNavigate();
   const { id: slug } = useParams();
   const [course, setCourse] = useState(undefined);
@@ -171,11 +188,77 @@ const LessonPage = ({ showToast }) => {
     return sorted[currentIndex + 1];
   }, [course, allCourses]);
 
+  const previousCourse = useMemo(() => {
+    if (!course || allCourses.length === 0) return null;
+
+    const sorted = [...allCourses].sort((a, b) => {
+      if (a.orderIndex === b.orderIndex) return a.id - b.id;
+      return a.orderIndex - b.orderIndex;
+    });
+    const currentIndex = sorted.findIndex((item) => item.slug === course.slug);
+    if (currentIndex <= 0) return null;
+
+    return sorted[currentIndex - 1];
+  }, [course, allCourses]);
+
   if (course === undefined) {
-    return <div className="text-white text-center py-20">Жүктелуде...</div>;
+    return (
+      <main className="lesson-page">
+        <section className="lesson-state-card">
+          <h2>Жүктелуде...</h2>
+          <p>Сабақ материалдары дайындалып жатыр.</p>
+        </section>
+      </main>
+    );
   }
 
-  return <LessonContent course={course} nextCourse={nextCourse} navigate={navigate} showToast={showToast} />;
+  if (!course) {
+    return (
+      <main className="lesson-page">
+        <section className="lesson-locked">
+          <h2>Курс табылмады</h2>
+          <p>Мүмкін, сілтеме ескірген немесе курс жойылған.</p>
+          <button className="btn-check" onClick={() => navigate("/courses")}>
+            Курстарға оралу
+          </button>
+        </section>
+      </main>
+    );
+  }
+
+  const hasAccess = course.price === 0 || enrolledCourseIds.includes(course.id);
+
+  if (!hasAccess) {
+    return (
+      <main className="lesson-page">
+        <section className="lesson-locked">
+          <span className="lesson-chip">Қолжетімділік шектеулі</span>
+          <h2>{course.title}</h2>
+          <p>
+            Бұл курс ақылы. Оқуды бастау үшін оны себет арқылы ашып алыңыз.
+          </p>
+          <div className="lesson-navigation">
+            <button className="btn-reset" onClick={() => navigate("/courses")}>
+              ← Курстарға қайту
+            </button>
+            <button className="btn-check" onClick={() => navigate("/cart")}>
+              Себетке өту
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <LessonContent
+      course={course}
+      previousCourse={previousCourse}
+      nextCourse={nextCourse}
+      navigate={navigate}
+      showToast={showToast}
+    />
+  );
 };
 
 export default LessonPage;

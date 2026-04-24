@@ -3,9 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 import "../style/cart.css";
 
-function CartPage({ cart = [], setCart, showToast }) {
+function CartPage({
+  cart = [],
+  setCart,
+  currentUser,
+  enrolledCourseIds = [],
+  setEnrolledCourseIds,
+  showToast,
+}) {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   useEffect(() => {
     api.getAllCourses()
@@ -14,8 +22,11 @@ function CartPage({ cart = [], setCart, showToast }) {
   }, [showToast]);
 
   const cartItems = useMemo(
-    () => courses.filter((course) => cart.includes(course.id)),
-    [cart, courses]
+    () =>
+      courses.filter(
+        (course) => cart.includes(course.id) && !enrolledCourseIds.includes(course.id)
+      ),
+    [cart, courses, enrolledCourseIds]
   );
 
   const total = useMemo(
@@ -23,9 +34,55 @@ function CartPage({ cart = [], setCart, showToast }) {
     [cartItems]
   );
 
+  const freeCount = useMemo(
+    () => cartItems.filter((course) => course.price === 0).length,
+    [cartItems]
+  );
+
+  const paidCount = cartItems.length - freeCount;
+
   const removeFromCart = (id) => {
     setCart((prev) => prev.filter((itemId) => itemId !== id));
     showToast?.("Курс себеттен өшірілді", "info");
+  };
+
+  const handleCheckout = async () => {
+    if (!currentUser?.id) {
+      showToast?.("Алдымен жүйеге кіріңіз.", "error");
+      navigate("/signin");
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      showToast?.("Себетте ашылмаған курс жоқ.", "info");
+      return;
+    }
+
+    try {
+      setIsCheckingOut(true);
+      const response = await api.checkout({
+        userId: currentUser.id,
+        courseIds: cartItems.map((course) => course.id),
+      });
+
+      setEnrolledCourseIds(response.enrolledCourseIds || []);
+      setCart((prev) =>
+        prev.filter((courseId) => !cartItems.some((course) => course.id === courseId))
+      );
+
+      showToast?.(
+        response.totalAmount > 0
+          ? `Сатып алу сәтті өтті. ${response.createdCount} курс ашылды.`
+          : `Тегін курстар ашылды: ${response.createdCount}`,
+        "success"
+      );
+
+      navigate("/courses");
+    } catch (error) {
+      showToast?.(error.message, "error");
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   return (
@@ -44,7 +101,7 @@ function CartPage({ cart = [], setCart, showToast }) {
       {cartItems.length === 0 ? (
         <div className="empty-cart">
           <div className="empty-icon">🛒</div>
-          <p>Себетіңіз әзірге бос</p>
+          <p>Себетіңізде сатып алынбаған курс жоқ</p>
           <button className="main-btn" onClick={() => navigate("/courses")}>
             Курстарды қарау
           </button>
@@ -67,7 +124,7 @@ function CartPage({ cart = [], setCart, showToast }) {
                 <div className="item-controls">
                   <span className="item-price">{course.price === 0 ? "Тегін" : `${course.price} ₸`}</span>
                   <button className="open-btn" onClick={() => navigate(`/course/${course.url}`)}>
-                    Оқу
+                    Қарау
                   </button>
                   <button className="delete-btn" onClick={() => removeFromCart(course.id)}>
                     Өшіру
@@ -79,18 +136,19 @@ function CartPage({ cart = [], setCart, showToast }) {
 
           <div className="cart-summary">
             <div className="summary-chip">{cartItems.length} курс таңдалды</div>
+            <div className="summary-breakdown">
+              <span>{freeCount} тегін</span>
+              <span>{paidCount} ақылы</span>
+            </div>
             <div className="summary-details">
               <span>Жалпы сома:</span>
               <span className="total-amount">{total} ₸</span>
             </div>
             <p className="summary-note">
-              Курстар сатып алынғаннан кейін кез келген уақытта оқу бетіне орала аласыз.
+              Сатып алу аяқталғаннан кейін курстар аккаунтыңызға бекітіледі және бірден ашылады.
             </p>
-            <button
-              className="checkout-btn"
-              onClick={() => showToast?.("Төлем модулі кейін қосылады", "info")}
-            >
-              Төлем жасауға өту
+            <button className="checkout-btn" disabled={isCheckingOut} onClick={handleCheckout}>
+              {isCheckingOut ? "Өңделуде..." : "Сатып алуды аяқтау"}
             </button>
           </div>
         </div>

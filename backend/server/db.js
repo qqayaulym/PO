@@ -571,17 +571,60 @@ export function getLikedCourseIds(userId) {
   ).map((item) => item.course_id);
 }
 
+export function getEnrolledCourseIds(userId) {
+  return all(
+    "SELECT course_id FROM enrollments WHERE user_id = :user_id ORDER BY course_id ASC",
+    { user_id: userId }
+  ).map((item) => item.course_id);
+}
+
+export function createEnrollments(userId, courseIds) {
+  const uniqueIds = [...new Set((courseIds || []).map((id) => Number(id)).filter(Boolean))];
+  if (uniqueIds.length === 0) {
+    return {
+      createdCount: 0,
+      enrolledCourseIds: getEnrolledCourseIds(userId),
+    };
+  }
+
+  const insertEnrollment = db.prepare(
+    `INSERT OR IGNORE INTO enrollments (user_id, course_id)
+     VALUES (:user_id, :course_id)`
+  );
+
+  let createdCount = 0;
+
+  db.exec("BEGIN");
+  try {
+    for (const courseId of uniqueIds) {
+      const result = insertEnrollment.run({ user_id: userId, course_id: courseId });
+      createdCount += Number(result.changes || 0);
+    }
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  }
+
+  return {
+    createdCount,
+    enrolledCourseIds: getEnrolledCourseIds(userId),
+  };
+}
+
 export function getDashboardStats() {
   const users = get("SELECT COUNT(*) AS count FROM users");
   const courses = get("SELECT COUNT(*) AS count FROM courses");
   const lessons = get("SELECT COUNT(*) AS count FROM lessons");
   const likes = get("SELECT COALESCE(SUM(likes_count), 0) AS count FROM courses");
+  const enrollments = get("SELECT COUNT(*) AS count FROM enrollments");
 
   return {
     users: users.count,
     courses: courses.count,
     lessons: lessons.count,
     likes: likes.count,
+    enrollments: enrollments.count,
   };
 }
 

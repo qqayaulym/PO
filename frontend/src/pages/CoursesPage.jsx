@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 import "../style/courses.css";
 
-function CoursesPage({ cart, setCart, currentUser, favorites, setFavorites, showToast }) {
+function CoursesPage({
+  cart,
+  setCart,
+  currentUser,
+  favorites,
+  setFavorites,
+  enrolledCourseIds = [],
+  showToast,
+}) {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
@@ -56,6 +64,12 @@ function CoursesPage({ cart, setCart, currentUser, favorites, setFavorites, show
   }, [filter, deferredSearch, sort, page, showToast]);
 
   const toggleCart = (id) => {
+    const isEnrolled = enrolledCourseIds.includes(id);
+    if (isEnrolled) {
+      showToast?.("Бұл курс сізге әлдеқашан ашылған.", "info");
+      return;
+    }
+
     setCart((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
   };
 
@@ -154,7 +168,14 @@ function CoursesPage({ cart, setCart, currentUser, favorites, setFavorites, show
           courses.map((course) => (
             <div key={course.id} className="course-card">
               <div className="course-info">
-                <span className="category-tag">{course.level}</span>
+                <div className="course-card-top">
+                  <span className="category-tag">{course.level}</span>
+                  <span className={`access-tag ${course.price === 0 || enrolledCourseIds.includes(course.id) ? "open" : "locked"}`}>
+                    {course.price === 0 || enrolledCourseIds.includes(course.id)
+                      ? "Ашық"
+                      : "Сатып алу керек"}
+                  </span>
+                </div>
                 <h3>{course.title}</h3>
                 <p>{course.description}</p>
                 <p className="price">{course.price === 0 ? "Тегін" : `${course.price} ₸`}</p>
@@ -169,12 +190,29 @@ function CoursesPage({ cart, setCart, currentUser, favorites, setFavorites, show
                   <span>({course.likes || 0})</span>
                 </button>
 
-                <button className="cart-btn" onClick={() => toggleCart(course.id)}>
-                  {cart.includes(course.id) ? "Себеттен алып тастау" : "Себетке қосу"}
+                <button
+                  className="cart-btn"
+                  disabled={enrolledCourseIds.includes(course.id)}
+                  onClick={() => toggleCart(course.id)}
+                >
+                  {enrolledCourseIds.includes(course.id)
+                    ? "Курс ашылған"
+                    : cart.includes(course.id)
+                      ? "Себеттен алып тастау"
+                      : "Себетке қосу"}
                 </button>
 
-                <button className="read-btn" onClick={() => navigate(`/course/${course.url}`)}>
-                  Оқу →
+                <button
+                  className="read-btn"
+                  onClick={() =>
+                    course.price === 0 || enrolledCourseIds.includes(course.id)
+                      ? navigate(`/course/${course.url}`)
+                      : navigate("/cart")
+                  }
+                >
+                  {course.price === 0 || enrolledCourseIds.includes(course.id)
+                    ? "Оқу →"
+                    : "Ашу →"}
                 </button>
               </div>
             </div>
