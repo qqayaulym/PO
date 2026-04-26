@@ -31,7 +31,20 @@ import {
   validateSignup,
 } from "./validation.js";
 
-initializeDatabase();
+let databaseReady = true;
+
+try {
+  await initializeDatabase();
+} catch (error) {
+  if (error?.code === "PGRST205") {
+    console.error(
+      "Supabase кестелері табылмады. backend/supabase/schema.sql файлын Supabase SQL Editor ішінде іске қосыңыз."
+    );
+    databaseReady = false;
+  } else {
+    throw error;
+  }
+}
 
 const app = express();
 const PORT = Number(process.env.PORT || 4000);
@@ -40,7 +53,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, storage: "sqlite" });
+  res.json({ ok: true, storage: "supabase" });
 });
 
 app.post("/api/auth/signup", async (req, res) => {
@@ -50,14 +63,14 @@ app.post("/api/auth/signup", async (req, res) => {
   }
 
   const email = req.body.email.trim().toLowerCase();
-  const exists = getUserByEmail(email);
+  const exists = await getUserByEmail(email);
 
   if (exists) {
     return res.status(409).json({ message: "Бұл email бұрын тіркелген." });
   }
 
   const passwordHash = await bcrypt.hash(req.body.password, 10);
-  const user = createUser({
+  const user = await createUser({
     fullName: req.body.fullName.trim(),
     email,
     phone: req.body.phone?.trim() || "",
@@ -74,7 +87,7 @@ app.post("/api/auth/signin", async (req, res) => {
   }
 
   const email = req.body.email.trim().toLowerCase();
-  const user = getUserByEmail(email);
+  const user = await getUserByEmail(email);
 
   if (!user) {
     return res.status(401).json({ message: "Email немесе құпиясөз қате." });
@@ -94,27 +107,27 @@ app.post("/api/auth/signin", async (req, res) => {
       role: user.role,
       createdAt: user.created_at,
     },
-    likedCourseIds: getLikedCourseIds(user.id),
-    enrolledCourseIds: getEnrolledCourseIds(user.id),
+    likedCourseIds: await getLikedCourseIds(user.id),
+    enrolledCourseIds: await getEnrolledCourseIds(user.id),
   });
 });
 
-app.get("/api/users", (_req, res) => {
-  res.json({ items: listUsers() });
+app.get("/api/users", async (_req, res) => {
+  res.json({ items: await listUsers() });
 });
 
-app.get("/api/users/:id/enrollments", (req, res) => {
+app.get("/api/users/:id/enrollments", async (req, res) => {
   const userId = Number(req.params.id);
-  const user = getUserById(userId);
+  const user = await getUserById(userId);
   if (!user) {
     return res.status(404).json({ message: "Пайдаланушы табылмады." });
   }
 
-  return res.json({ items: getEnrolledCourseIds(userId) });
+  return res.json({ items: await getEnrolledCourseIds(userId) });
 });
 
-app.delete("/api/users/:id", (req, res) => {
-  const result = deleteUser(Number(req.params.id));
+app.delete("/api/users/:id", async (req, res) => {
+  const result = await deleteUser(Number(req.params.id));
   if (!result.changes) {
     return res.status(404).json({ message: "Пайдаланушы табылмады." });
   }
@@ -122,11 +135,11 @@ app.delete("/api/users/:id", (req, res) => {
   return res.json({ ok: true });
 });
 
-app.get("/api/courses", (req, res) => {
+app.get("/api/courses", async (req, res) => {
   const page = Math.max(1, Number(req.query.page || 1));
   const limit = Math.max(1, Math.min(12, Number(req.query.limit || 6)));
 
-  const data = getCourses({
+  const data = await getCourses({
     search: String(req.query.search || ""),
     filter: String(req.query.filter || "all"),
     sort: String(req.query.sort || ""),
@@ -137,12 +150,12 @@ app.get("/api/courses", (req, res) => {
   res.json(data);
 });
 
-app.get("/api/courses/all", (_req, res) => {
-  res.json({ items: getAllCourses() });
+app.get("/api/courses/all", async (_req, res) => {
+  res.json({ items: await getAllCourses() });
 });
 
-app.get("/api/courses/:slug", (req, res) => {
-  const course = getCourseBySlug(req.params.slug);
+app.get("/api/courses/:slug", async (req, res) => {
+  const course = await getCourseBySlug(req.params.slug);
   if (!course) {
     return res.status(404).json({ message: "Курс табылмады." });
   }
@@ -150,14 +163,14 @@ app.get("/api/courses/:slug", (req, res) => {
   return res.json({ item: course });
 });
 
-app.post("/api/courses", (req, res) => {
+app.post("/api/courses", async (req, res) => {
   const errors = validateCourse(req.body);
   if (errors.length) {
     return res.status(400).json({ message: errors[0], errors });
   }
 
   const slug = slugify(req.body.slug || req.body.title);
-  const course = createCourse({
+  const course = await createCourse({
     title: req.body.title.trim(),
     slug,
     description: req.body.description.trim(),
@@ -169,20 +182,20 @@ app.post("/api/courses", (req, res) => {
   return res.status(201).json({ item: course });
 });
 
-app.put("/api/courses/:id", (req, res) => {
+app.put("/api/courses/:id", async (req, res) => {
   const errors = validateCourse(req.body);
   if (errors.length) {
     return res.status(400).json({ message: errors[0], errors });
   }
 
   const courseId = Number(req.params.id);
-  const existing = getCourseById(courseId);
+  const existing = await getCourseById(courseId);
   if (!existing) {
     return res.status(404).json({ message: "Курс табылмады." });
   }
 
   const slug = slugify(req.body.slug || req.body.title);
-  const course = updateCourse(courseId, {
+  const course = await updateCourse(courseId, {
     title: req.body.title.trim(),
     slug,
     description: req.body.description.trim(),
@@ -194,8 +207,8 @@ app.put("/api/courses/:id", (req, res) => {
   return res.json({ item: course });
 });
 
-app.delete("/api/courses/:id", (req, res) => {
-  const result = deleteCourse(Number(req.params.id));
+app.delete("/api/courses/:id", async (req, res) => {
+  const result = await deleteCourse(Number(req.params.id));
   if (!result.changes) {
     return res.status(404).json({ message: "Курс табылмады." });
   }
@@ -203,19 +216,19 @@ app.delete("/api/courses/:id", (req, res) => {
   return res.json({ ok: true });
 });
 
-app.put("/api/courses/:id/lesson", (req, res) => {
+app.put("/api/courses/:id/lesson", async (req, res) => {
   const errors = validateLesson(req.body);
   if (errors.length) {
     return res.status(400).json({ message: errors[0], errors });
   }
 
   const courseId = Number(req.params.id);
-  const existing = getCourseById(courseId);
+  const existing = await getCourseById(courseId);
   if (!existing) {
     return res.status(404).json({ message: "Курс табылмады." });
   }
 
-  const course = updateLessonByCourseId(courseId, {
+  const course = await updateLessonByCourseId(courseId, {
     title: req.body.title.trim(),
     theory: req.body.theory.trim(),
     preCode: req.body.preCode || "",
@@ -227,26 +240,26 @@ app.put("/api/courses/:id/lesson", (req, res) => {
   return res.json({ item: course });
 });
 
-app.post("/api/courses/:id/like", (req, res) => {
+app.post("/api/courses/:id/like", async (req, res) => {
   const userId = Number(req.body.userId);
   if (!userId) {
     return res.status(400).json({ message: "Лайк үшін пайдаланушы идентификаторы керек." });
   }
 
-  const user = getUserById(userId);
+  const user = await getUserById(userId);
   if (!user) {
     return res.status(401).json({ message: "Пайдаланушы табылмады. Қайта кіріңіз." });
   }
 
-  const course = getCourseById(Number(req.params.id));
+  const course = await getCourseById(Number(req.params.id));
   if (!course) {
     return res.status(404).json({ message: "Курс табылмады." });
   }
 
-  return res.json(toggleCourseLike(course.id, userId));
+  return res.json(await toggleCourseLike(course.id, userId));
 });
 
-app.post("/api/checkout", (req, res) => {
+app.post("/api/checkout", async (req, res) => {
   const userId = Number(req.body.userId);
   const courseIds = Array.isArray(req.body.courseIds) ? req.body.courseIds.map(Number) : [];
 
@@ -254,7 +267,7 @@ app.post("/api/checkout", (req, res) => {
     return res.status(400).json({ message: "Сатып алу үшін пайдаланушы идентификаторы керек." });
   }
 
-  const user = getUserById(userId);
+  const user = await getUserById(userId);
   if (!user) {
     return res.status(401).json({ message: "Пайдаланушы табылмады. Қайта кіріңіз." });
   }
@@ -264,7 +277,7 @@ app.post("/api/checkout", (req, res) => {
     return res.status(400).json({ message: "Себет бос. Алдымен курс таңдаңыз." });
   }
 
-  const allCourses = getAllCourses();
+  const allCourses = await getAllCourses();
   const missingCourse = uniqueCourseIds.find(
     (courseId) => !allCourses.some((course) => course.id === courseId)
   );
@@ -273,7 +286,7 @@ app.post("/api/checkout", (req, res) => {
     return res.status(404).json({ message: "Таңдалған курстардың бірі табылмады." });
   }
 
-  const result = createEnrollments(userId, uniqueCourseIds);
+  const result = await createEnrollments(userId, uniqueCourseIds);
   const purchasedCourses = allCourses.filter((course) => uniqueCourseIds.includes(course.id));
   const totalAmount = purchasedCourses.reduce((sum, course) => sum + Number(course.price || 0), 0);
 
@@ -285,12 +298,12 @@ app.post("/api/checkout", (req, res) => {
   });
 });
 
-app.get("/api/dashboard", (_req, res) => {
-  res.json(getDashboardStats());
+app.get("/api/dashboard", async (_req, res) => {
+  res.json(await getDashboardStats());
 });
 
 app.use((error, _req, res, _next) => {
-  if (error?.code === "SQLITE_CONSTRAINT_UNIQUE") {
+  if (error?.code === "SQLITE_CONSTRAINT_UNIQUE" || error?.code === "23505") {
     return res.status(409).json({ message: "Бұл мән база ішінде бірегей болу керек." });
   }
 
@@ -298,6 +311,8 @@ app.use((error, _req, res, _next) => {
   return res.status(500).json({ message: "Серверде қате пайда болды." });
 });
 
-app.listen(PORT, () => {
-  console.log(`API is running on http://localhost:${PORT}`);
-});
+if (databaseReady) {
+  app.listen(PORT, () => {
+    console.log(`API is running on http://localhost:${PORT}`);
+  });
+}

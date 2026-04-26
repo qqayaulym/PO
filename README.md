@@ -1,32 +1,39 @@
-# SQLite CRUD Project
+# SQL Study Hub
 
-Жоба енді екі бөлікке бөлінді:
+Жоба екі бөлікке бөлінген:
 
 - `frontend/` — React + Vite интерфейсі
-- `backend/` — Express + SQLite REST API
+- `backend/` — Express REST API
+
+Енді дерекқор `SQLite` емес, `Supabase Postgres`.
 
 ## Іске қосу
 
-1. Backend:
+1. `Supabase` ішінде [backend/supabase/schema.sql](/C:/Users/Газиза/Desktop/PO/backend/supabase/schema.sql) файлын SQL Editor-ға қойып іске қосыңыз.
+2. `backend/.env` файлына мыналарды жазыңыз:
+
+```env
+PORT=4000
+SUPABASE_URL=https://mogfxnhispeeedqyfewh.supabase.co
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+```
+
+Ескерту:
+Backend кодында `VITE_SUPABASE_URL` және `VITE_SUPABASE_PUBLISHABLE_KEY` мәндері де fallback ретінде қолданылады, бірақ сервер үшін `SUPABASE_*` атаулары түсініктірек.
+
+3. Backend:
    `cd backend`
+   `npm install`
    `npm run dev`
 
-2. Frontend:
+4. Frontend:
    `cd frontend`
+   `npm install`
    `npm run dev`
 
 ## Әдепкі админ
 
+Алғашқы іске қосылғанда, егер база бос болса, сервер мына админді автоматты түрде жасайды:
+
 - Email: `admin@sqlstudy.kz`
 - Құпиясөз: `admin123`
-
-## Бұл жобада не бар
-
-- SQLite дерекқоры және бірнеше кесте: `users`, `courses`, `lessons`, `enrollments`, `course_likes`
-- Байланыстар: `1:1` (`courses` -> `lessons`) және `N:M` (`users` <-> `courses`)
-- REST API: `GET`, `POST`, `PUT`, `DELETE`
-- React формалары: тіркелу, кіру, курс қосу/өңдеу/жою, сабақ өңдеу
-- Іздеу, pagination, loading, confirm, toast хабарламалар
-- Парольді `bcrypt` арқылы хэштеу
-- Серверлік және фронтендтік валидация
-New feature added
