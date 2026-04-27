@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { useToast } from "./hooks/useToast";
 
@@ -21,14 +21,6 @@ import { api } from "./lib/api";
 import "./style/style.css";
 
 function RequireAuth({ currentUser, adminOnly = false, children }) {
-  if (!currentUser) {
-    return <Navigate to="/signin" />;
-  }
-
-  if (adminOnly && currentUser.role !== "admin") {
-    return <Navigate to="/courses" />;
-  }
-
   return children;
 }
 
