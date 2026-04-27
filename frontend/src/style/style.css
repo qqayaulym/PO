@@ -62,28 +62,6 @@ textarea {
     font: inherit;
 }
 
-button,
-input,
-select,
-textarea,
-a {
-    transition:
-        background-color 0.25s ease,
-        border-color 0.25s ease,
-        color 0.25s ease,
-        box-shadow 0.25s ease,
-        transform 0.25s ease;
-}
-
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-a:focus-visible {
-    outline: 3px solid rgba(132, 142, 89, 0.28);
-    outline-offset: 3px;
-}
-
 #root {
     min-height: 100vh;
 }
@@ -103,30 +81,6 @@ main {
     padding: 20px;
     margin: 20px auto;
     border-radius: 30px;
-}
-
-.page-state-card,
-.lesson-state-card {
-    background: var(--surface-strong);
-    border: 1px solid var(--border-soft);
-    border-radius: 28px;
-    padding: 34px;
-    box-shadow: var(--shadow-soft);
-    text-align: center;
-    color: var(--text-primary);
-}
-
-.page-state-card h2,
-.lesson-state-card h2 {
-    margin: 0 0 12px;
-    color: var(--text-primary);
-}
-
-.page-state-card p,
-.lesson-state-card p {
-    margin: 0;
-    color: var(--text-secondary);
-    line-height: 1.7;
 }
 
 header {

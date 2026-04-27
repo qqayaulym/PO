@@ -35,15 +35,8 @@ function SignInPage({ setCurrentUser, setFavorites, setEnrolledCourseIds, showTo
   };
 
   return (
-    <main className="auth-page">
-      <div className="auth-intro">
-        <p className="auth-kicker">SQL Study Hub</p>
-        <h2 className="sign-title">Кіру</h2>
-        <p className="auth-subtitle">
-          Оқу прогресін, ашылған курстарды және сабақтарды жалғастыру үшін аккаунтқа кіріңіз.
-        </p>
-      </div>
-
+    <main>
+      <h2 className="sign-title">Кіру</h2>
       <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input

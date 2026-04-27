@@ -34,15 +34,8 @@ function SignUpPage({ showToast }) {
   };
 
   return (
-    <main className="auth-page">
-      <div className="auth-intro">
-        <p className="auth-kicker">Жаңа аккаунт</p>
-        <h2 className="sign-title">Тіркелу</h2>
-        <p className="auth-subtitle">
-          Бірнеше минутта тіркеліп, SQLite курстарын қазақ тілінде практикалық форматта бастаңыз.
-        </p>
-      </div>
-
+    <main>
+      <h2 className="sign-title">Тіркелу</h2>
       <form className="auth-form" onSubmit={handleSubmit}>
         <label htmlFor="fullName">Аты-жөні:</label>
         <input
