@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { useToast } from "./hooks/useToast";
 
@@ -21,6 +21,14 @@ import { api } from "./lib/api";
 import "./style/style.css";
 
 function RequireAuth({ currentUser, adminOnly = false, children }) {
+  if (!currentUser) {
+    return <Navigate to="/signin" replace />;
+  }
+
+  if (adminOnly && currentUser.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+
   return children;
 }
 
@@ -109,17 +117,15 @@ export default function App() {
           <Route
             path="/courses"
             element={
-              <RequireAuth currentUser={currentUser}>
-                <CoursesPage
-                  cart={cart}
-                  setCart={setCart}
-                  currentUser={currentUser}
-                  favorites={favorites}
-                  setFavorites={setFavorites}
-                  enrolledCourseIds={enrolledCourseIds}
-                  showToast={showToast}
-                />
-              </RequireAuth>
+              <CoursesPage
+                cart={cart}
+                setCart={setCart}
+                currentUser={currentUser}
+                favorites={favorites}
+                setFavorites={setFavorites}
+                enrolledCourseIds={enrolledCourseIds}
+                showToast={showToast}
+              />
             }
           />
 
